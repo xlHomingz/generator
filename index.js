@@ -1,5 +1,6 @@
 // Dependencies
 const Discord = require('discord.js');
+const keep_alive = require('./keep_alive.js');
 const fs = require('fs');
 const config = require('./config.json');
 const CatLoggr = require('cat-loggr');
