@@ -1,0 +1,21 @@
+{
+    "prefix": ".",
+    "genChannel": "1215111222500921405",
+    "pgenChannel": "1210743762947407923", 
+    "servername" : "",
+    "website": "",
+    "genCooldown": "0",
+    "genCooldownChannel": "1215111222500921405",
+    "pgenCooldownChannel": "1210743762947407923",
+    "pgenCooldown": "0",
+    "color": {
+        "green": "0x1900ff",
+        "yellow": "0xFEE75C",
+        "red": "0xff0000",
+        "default": "01900ff"
+    },
+    "command": {
+        "notfound_message": true,
+        "error_message": true
+    }
+}
