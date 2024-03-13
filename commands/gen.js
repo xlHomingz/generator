@@ -66,21 +66,6 @@ module.exports = {
 
       const filePath = `${__dirname}/../stock/${args[0]}.txt`;
 
-      if (args.length === 1 && ['netflix', 'crunchyroll', 'roblox', 'xbox', 'valorant', 'discord', 'espn', 'nitro', 'Netflix', 'Crunchyroll', 'Roblox', 'Xbox', 'Valorant', 'Discord', 'Espn', 'Nitro', 'Paypal', 'paypal', 'PayPal'].includes(args[0])) {
-        const embedMessage = new MessageEmbed()
-          .setColor(config.color.red)
-          .setTitle('Wrong command usage!')
-          .setDescription(`**Get premium for this service! It's free to get premium** https://discord.com/channels/1044571905576931328/1180160635703668918`)
-          .setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true, size: 64 }))
-          .setTimestamp();
-        message.channel.send(embedMessage);
-        return;
-      }
-
-      if (['netflix', 'crunchyroll', 'roblox', 'xbox', 'valorant', 'discord', 'espn', 'nitro', 'Netflix', 'Crunchyroll', 'Roblox', 'Xbox', 'Valorant', 'Discord', 'Espn', 'Nitro', 'Paypal', 'paypal', 'PayPal'].includes(args[0])) {
-        return;
-      }
-
       fs.readFile(filePath, function(error, data) {
         if (!error) {
           data = data.toString();
@@ -148,9 +133,7 @@ module.exports = {
           const args = message.content.slice(config.prefix.length).trim().split(/ +/);
           const command = args.shift().toLowerCase();
 
-          if (args[0] === 'netflix') {
-            return;
-          }
+        
 
           return message.channel.send(
             new MessageEmbed()
