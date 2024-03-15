@@ -1,12 +1,12 @@
 {
     "prefix": ".",
     "genChannel": "1215111222500921405",
-    "pgenChannel": "1210743762947407923", 
+    "pgenChannel": "1217615244839485581", 
     "servername" : "",
     "website": "",
     "genCooldown": "0",
     "genCooldownChannel": "1215111222500921405",
-    "pgenCooldownChannel": "1210743762947407923",
+    "pgenCooldownChannel": "1217615244839485581",
     "pgenCooldown": "0",
     "color": {
         "green": "0x1900ff",
