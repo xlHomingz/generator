@@ -110,12 +110,7 @@ module.exports = {
               setTimeout(() => {
                 cooldowns.delete(message.author.id);
 
-                // Cooldown süresi bittiğinde belirli bir kanala mesaj gönder
-                const cooldownChannel = message.client.channels.cache.get(config.genCooldownChannel);
-                if (cooldownChannel) {
-                  cooldownChannel.send(`*Cooldown ended for ${message.author}!*`);
-                }
-              }, 900000);
+                
 
               if (error) return log.error(error);
             });
