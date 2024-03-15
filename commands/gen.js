@@ -110,7 +110,10 @@ module.exports = {
               setTimeout(() => {
                 cooldowns.delete(message.author.id);
 
-                
+                // Cooldown süresi bittiğinde belirli bir kanala mesaj gönder
+                  const cooldownChannel = message.client.channels.cache.get(config.genCooldownChannel);
+                  
+                }, 900000);
 
               if (error) return log.error(error);
             });
@@ -128,7 +131,7 @@ module.exports = {
           const args = message.content.slice(config.prefix.length).trim().split(/ +/);
           const command = args.shift().toLowerCase();
 
-        
+
 
           return message.channel.send(
             new MessageEmbed()
