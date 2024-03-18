@@ -107,7 +107,7 @@ module.exports = {
                   .setTimestamp()
               );
 
-              cooldowns.set(message.author.id, Date.now() + 0); // 15 dakika = 900000 milisaniye
+              cooldowns.set(message.author.id, Date.now() + 1800000); // 15 dakika = 900000 milisaniye
 
               setTimeout(() => {
                 cooldowns.delete(message.author.id);
@@ -124,7 +124,7 @@ module.exports = {
                   .setTimestamp();
 
                 cooldownChannel.send(logEmbed);
-              }, 0);
+              }, 1800000);
 
               if (error) return log.error(error);
             });
