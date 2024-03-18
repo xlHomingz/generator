@@ -112,7 +112,16 @@ module.exports = {
 
                 // Cooldown süresi bittiğinde belirli bir kanala mesaj gönder
                 const cooldownChannel = message.client.channels.cache.get(config.pgenCooldownChannel);
-              
+                const logEmbed = new MessageEmbed()
+                  .setColor(config.color.blue)
+                  .setTitle('Generator Log')
+                  .setDescription(`**${message.author}** generated a service:`)
+                  .addField('Service', args[0], true)
+                  .addField('‎ ', firstLine, true)
+                  .setThumbnail(message.author.displayAvatarURL({ dynamic: true, size: 64 }))
+                  .setTimestamp();
+
+                cooldownChannel.send(logEmbed);
               }, 600000);
 
               if (error) return log.error(error);
