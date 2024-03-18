@@ -1,3 +1,4 @@
+
 // Dependencies
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
@@ -77,7 +78,7 @@ module.exports = {
               new MessageEmbed()
                 .setColor(config.color.red)
                 .setTitle('Generator error!')
-                .setDescription(`We don't have \`${args[0]}\` currently!`)
+                .setDescription(`We don't have \`${args[0]}\` accounts currently!`)
                 .setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true, size: 64 }))
                 .setTimestamp()
             );
@@ -87,12 +88,10 @@ module.exports = {
             .setColor(config.color.green)
             .setTitle('Generated service')
             .addField('Service', `\`\`\`${args[0][0].toUpperCase()}${args[0].slice(1).toLowerCase()}\`\`\``, true)
-            .addField('‎ ', `\`\`\`${firstLine}\`\`\``, true)
-            .setThumbnail(message.author.displayAvatarURL({ dynamic: true, size: 64 }))
+            .addField('‎', `\`\`\`${firstLine}\`\`\``, true)
             .setTimestamp();
 
-          message.author.send(embedMessage)
-            .catch(() => message.channel.send("I couldn't send you a DM! Please enable your DMs."));
+          message.author.send(embedMessage);
 
           if (position !== -1) {
             data = data.substr(position + 1);
@@ -107,24 +106,15 @@ module.exports = {
                   .setTimestamp()
               );
 
-              cooldowns.set(message.author.id, Date.now() + 1800000); // 15 dakika = 900000 milisaniye
+              cooldowns.set(message.author.id, Date.now() + 1200000); // 15 dakika = 900000 milisaniye
 
               setTimeout(() => {
                 cooldowns.delete(message.author.id);
 
                 // Cooldown süresi bittiğinde belirli bir kanala mesaj gönder
-                const cooldownChannel = message.client.channels.cache.get(config.genCooldownChannel);
-                const logEmbed = new MessageEmbed()
-                  .setColor(config.color.blue)
-                  .setTitle('Generator Log')
-                  .setDescription(`**${message.author}** generated a service:`)
-                  .addField('Service', args[0], true)
-                  .addField('‎ ', firstLine, true)
-                  .setThumbnail(message.author.displayAvatarURL({ dynamic: true, size: 64 }))
-                  .setTimestamp();
+                  const cooldownChannel = message.client.channels.cache.get(config.genCooldownChannel);
 
-                cooldownChannel.send(logEmbed);
-              }, 1800000);
+                }, 1200000);
 
               if (error) return log.error(error);
             });
@@ -139,6 +129,11 @@ module.exports = {
             );
           }
         } else {
+          const args = message.content.slice(config.prefix.length).trim().split(/ +/);
+          const command = args.shift().toLowerCase();
+
+
+
           return message.channel.send(
             new MessageEmbed()
               .setColor(config.color.red)
