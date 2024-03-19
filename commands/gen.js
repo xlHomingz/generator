@@ -78,7 +78,7 @@ module.exports = {
               new MessageEmbed()
                 .setColor(config.color.red)
                 .setTitle('Generator error!')
-                .setDescription(`We don't have \`${args[0]}\` accounts currently!`)
+                .setDescription(`We don't have \`${args[0]}\` currently!`)
                 .setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true, size: 64 }))
                 .setTimestamp()
             );
@@ -112,9 +112,9 @@ module.exports = {
                 cooldowns.delete(message.author.id);
 
                 // Cooldown süresi bittiğinde belirli bir kanala mesaj gönder
-                  const cooldownChannel = message.client.channels.cache.get(config.genCooldownChannel);
+                const cooldownChannel = message.client.channels.cache.get(config.genCooldownChannel);
 
-                }, 1200000);
+              }, 1200000);
 
               if (error) return log.error(error);
             });
@@ -155,4 +155,4 @@ module.exports = {
       );
     }
   }
-};
+}; s
