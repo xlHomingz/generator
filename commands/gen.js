@@ -62,7 +62,7 @@ module.exports = {
         dailyLimits.set(userId, userLimitInfo);
       }
 
-      if (userLimitInfo.usage >= 3) {
+      if (userLimitInfo.usage >= 2) {
         return message.channel.send(
           new MessageEmbed()
             .setColor(config.color.red)
