@@ -1,4 +1,3 @@
-
 // Dependencies
 const { MessageEmbed } = require('discord.js');
 const fs = require('fs');
@@ -8,6 +7,19 @@ const CatLoggr = require('cat-loggr');
 // Functions
 const log = new CatLoggr();
 const cooldowns = new Map(); // Cooldown sürelerini saklamak için bir Map
+const dailyLimits = new Map(); // Kullanıcıların günlük limitini saklamak için bir Map
+
+// Günlük sınırlamaları sıfırlamak için bir fonksiyon
+function resetDailyLimits() {
+  dailyLimits.clear(); // Günlük limitleri temizle
+  const currentTime = new Date();
+  const resetTime = new Date(currentTime.getFullYear(), currentTime.getMonth(), currentTime.getDate() + 1); // Yarın aynı saatte sıfırla
+  const timeUntilReset = resetTime.getTime() - currentTime.getTime();
+  setTimeout(resetDailyLimits, timeUntilReset); // Yarına kadar bekle ve tekrar çağır
+}
+
+// Bot başlatıldığında günlük limit sıfırlama fonksiyonunu başlat
+resetDailyLimits();
 
 module.exports = {
   name: 'gen',
@@ -38,15 +50,38 @@ module.exports = {
     }
 
     if (message.channel.id === config.genChannel) {
-      const cooldownTime = cooldowns.get(message.author.id) || 0;
-      const remainingTime = Math.max(0, cooldownTime - Date.now());
+      const userId = message.author.id;
+      const currentTime = Date.now();
+
+      // Check if user has reached daily limit
+      const userLimitInfo = dailyLimits.get(userId) || { usage: 0, resetTime: currentTime + 24 * 60 * 60 * 1000 };
+      if (userLimitInfo.resetTime < currentTime) {
+        // Reset daily limit if reset time has passed
+        userLimitInfo.usage = 0;
+        userLimitInfo.resetTime = currentTime + 24 * 60 * 60 * 1000;
+        dailyLimits.set(userId, userLimitInfo);
+      }
+
+      if (userLimitInfo.usage >= 3) {
+        return message.channel.send(
+          new MessageEmbed()
+            .setColor(config.color.red)
+            .setTitle('Daily Limit Reached!')
+            .setDescription(`You have reached your daily limit for using this command! Remaining cooldown: **${Math.floor((userLimitInfo.resetTime - currentTime) / (1000 * 60 * 60))} hours and ${Math.floor((userLimitInfo.resetTime - currentTime) % (1000 * 60 * 60) / (1000 * 60))} minutes.**`)
+            .setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true, size: 64 }))
+            .setTimestamp()
+        );
+      }
+
+      const cooldownTime = cooldowns.get(userId) || 0;
+      const remainingTime = Math.max(0, cooldownTime - currentTime);
 
       if (remainingTime > 0) {
         return message.channel.send(
           new MessageEmbed()
             .setColor(config.color.red)
             .setTitle('Cooldown!')
-            .setDescription(`You are on cooldown. Remaining time: **${Math.floor(remainingTime / 60000)} minutes and ${Math.floor((remainingTime % 60000) / 1000)} seconds.**`)
+            .setDescription(`You are on cooldown. Remaining cooldown: **${Math.floor(remainingTime / 60000)} minutes and ${Math.floor((remainingTime % 60000) / 1000)} seconds.**`)
             .setFooter(message.author.tag, message.author.displayAvatarURL({ dynamic: true, size: 64 }))
             .setTimestamp()
         );
@@ -93,6 +128,10 @@ module.exports = {
 
           message.author.send(embedMessage);
 
+          // Update daily limit usage
+          userLimitInfo.usage++;
+          dailyLimits.set(userId, userLimitInfo);
+
           if (position !== -1) {
             data = data.substr(position + 1);
 
@@ -106,10 +145,10 @@ module.exports = {
                   .setTimestamp()
               );
 
-              cooldowns.set(message.author.id, Date.now() + 1200000); // 15 dakika = 900000 milisaniye
+              cooldowns.set(userId, currentTime + 1200000); // 15 dakika = 900000 milisaniye
 
               setTimeout(() => {
-                cooldowns.delete(message.author.id);
+                cooldowns.delete(userId);
 
                 // Cooldown süresi bittiğinde belirli bir kanala mesaj gönder
                 const cooldownChannel = message.client.channels.cache.get(config.genCooldownChannel);
